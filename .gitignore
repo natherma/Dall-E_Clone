@@ -1,1 +1,3 @@
+# files that are Ignored by git
 node_modules
+.ENV
