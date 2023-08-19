@@ -1,7 +1,85 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import {preview} from '../assets'
+import { FormField,Loader } from '../Components'
+import { getRandomPrompt } from '../utils'
 
 export default function Creatpost() {
+  const navigate = useNavigate();
+  const [form,setForm] = useState({name:"",prompt:"",photo:""});
+  const [generating,useGenerating] = useState(false); 
+  const [loading,setloading] = useState(false);
+  const handleSubmit = () =>
+  {
+    return ""
+  }
+  const handleChange = (e) =>
+  {
+     setForm({...form,[e.target.name]:e.target.value}) 
+  }
+  
+  const handleSurprice = () =>
+  {
+  const randomPromp = getRandomPrompt(form.prompt);
+  setForm({...form,prompt:randomPromp})
+  }
+
+  const generateImage = () =>
+  {
+
+  }
   return (
-    <div>Creatpost</div>
+    <section className='max-w-7xl mx-auto'>
+      <div>
+              <h1 className="font-extrabold text-[#222328] text-[32px]">
+                Create
+              </h1>
+              <p className="mt-2 text-[#6466ff] text-[16px] max-w[500px]">
+                Create imaginative and visually stunning image through DALL-E AI and share them with community
+              </p>
+            </div>
+
+            <form className='mt-12 max-w-3xl' onSubmit={handleSubmit  }>
+                <div className='flex flex-col gap-5'>
+                      <FormField labelName = "Your Name" type="text" name="name" placeholder = "Jogn Doe" value = {form.name} handleChange={handleChange}/>
+                      
+                      <FormField labelName = "Prompt" type="text" name="prompt" placeholder = "an oil pastel drawing of an annoyed cat in a spaceship" value = {form.prompt} handleChange={handleChange} isSurpriceMe handleSurprice={handleSurprice}/>   
+                   <div className='relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-64 p-3 h-64 flex justify-center item-center'>
+                  {
+                    form.photo? (
+                      <img src={form.photo} alt={form.prompt} className='w-full -h-full object-contain' >
+                      </img>
+                    ):(
+                      <img src={preview} alt='preview' className='w-9/12 h-9/12 object-conatian opacity-40'>
+                      </img>
+                    )
+                  }
+                  {
+                    generating && (
+                      <div className='absolute inset-0 z-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] rounded-lg'>
+                         <Loader/>
+                      </div>
+                    )
+                  }
+           </div>
+                </div>
+                <div className='mt-5 flex gap-5'>
+                  <button type='button' onClick={generateImage} className='text-white bg-[#7285A5] font-medium rounded-md -text-sm w-full sm:w-auto px-5 py-2.5'>
+                     {
+                     generating?"Generating......":"Generate Image"
+                     }
+                  </button>
+                </div> 
+                <div className='mt-8'>
+                  <p className='mt-2 text-[#666e75] text-[17px]'>
+                     You have created the image you want, you can share it with others in the community
+                  </p>
+                  <button type='submit' className='mt-3 text-white bg-[#6466ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center'>
+                       {loading ? "sharing...":"share"}
+                  </button>
+                </div>
+            </form>
+    </section>
   )
 }
