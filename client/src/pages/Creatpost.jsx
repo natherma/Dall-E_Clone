@@ -8,7 +8,7 @@ import { getRandomPrompt } from '../utils'
 export default function Creatpost() {
   const navigate = useNavigate();
   const [form,setForm] = useState({name:"",prompt:"",photo:""});
-  const [generating,useGenerating] = useState(false); 
+  const [generating,setGenerating] = useState(false); 
   const [loading,setloading] = useState(false);
   const handleSubmit = () =>
   {
@@ -25,9 +25,29 @@ export default function Creatpost() {
   setForm({...form,prompt:randomPromp})
   }
 
-  const generateImage = () =>
+  const generateImage = async () =>
   {
-
+    if(form.prompt)
+    {
+      try
+      {
+        setGenerating(true)
+        const response = await fetch("http://localhost:8080/api/v1/dallE",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:form.prompt})})
+        const data = response.json();
+        setForm({...form,photo:`data:image/jpeg;base64,${data.photo}`})
+      }
+      catch(error)
+      {
+        alert(error,"Something went wrong");
+      }
+      finally
+      {
+        setGenerating(false)
+      }
+    }
+    else{
+      alert("Please enter a prompt")
+    }
   }
   return (
     <section className='max-w-7xl mx-auto'>
